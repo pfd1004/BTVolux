@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/icono_verde.png" alt="BTVolux logo" width="140">
+  <img src="app_data/images/icono_verde.png" alt="BTVolux logo" width="140">
 </p>
 
 <h1 align="center">BTVolux</h1>
