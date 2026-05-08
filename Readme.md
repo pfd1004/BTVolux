@@ -177,6 +177,19 @@ launch.bat
 
 ---
 
+## Interfaz
+
+### Segmentación
+![Pestaña de segmentación](app_data/images/pestana_segmentacion.png)
+
+### Validación
+![Pestaña de validación](app_data/images/pestana_validacion.png)
+
+### Atlas anatómico
+![Pestaña de atlas anatómico](app_data/images/pestana_atlas.png)
+
+---
+
 ## Modelos
 
 Los modelos no se incluyen en este repositorio.
@@ -197,47 +210,6 @@ para conocer:
 ---
 
 
-## Cálculo de volumen
-
-BTVolux calcula el volumen tumoral a partir de la máscara binaria generada por cada modelo.
-
-El volumen se obtiene como:
-
-```text
-volumen = número de vóxeles tumorales × tamaño físico del vóxel
-```
-
-Si el espaciado está en milímetros, el resultado se convierte a mililitros dividiendo entre 1000.
-
----
-
-## Validación DICE
-
-BTVolux permite cargar una segmentación manual de referencia en formato NIfTI.
-
-A partir de ella, calcula el coeficiente DICE entre la máscara manual y las predicciones automáticas de los modelos disponibles.
-
----
-
-## Media ponderada
-
-La opción `Media ponderada` combina las segmentaciones disponibles de los modelos individuales usando pesos basados en su rendimiento medio.
-
-Se utiliza de dos formas:
-
-1. Como máscara binaria para cálculo de volumen y DICE.
-2. Como mapa de calor en el visor, mostrando el grado de acuerdo ponderado entre modelos.
-
----
-
-## Atlas anatómico
-
-La pestaña de atlas permite analizar el solape entre una máscara tumoral y regiones anatómicas del atlas Harvard-Oxford, tras registro al espacio MNI.
-
-Este análisis es exploratorio y no debe interpretarse como informe clínico definitivo.
-
-
----
 
 ## Protección de datos
 
