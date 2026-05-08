@@ -6,11 +6,13 @@ runtime/
 Pacientes/
 Pacientes_nifti/
 
-app_data
+
 app_data/results/
 app_data/logs/
 app_data/state/
 app_data/atlas/
+app_data/atlas_cache/
+
 
 
 # Modelos pesados

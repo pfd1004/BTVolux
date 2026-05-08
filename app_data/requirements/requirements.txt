@@ -1,0 +1,49 @@
+# ============================================================
+# BTVolux - requirements del entorno principal de la app
+# ============================================================
+#
+# Este requirements.txt corresponde al entorno principal de BTVolux:
+#   - interfaz Shiny
+#   - lectura DICOM/NIfTI
+#   - visualización multiplanar
+#   - cálculo de volumen
+#   - cálculo DICE
+#   - inferencia Radionics/Raidionics vía ONNX
+#   - atlas anatómico
+#   - SynthStrip
+#
+# IMPORTANTE:
+# nnU-Net, AGUNet/DAGUNet/UNet-FV/UNet-Slabs y PLS-Net pueden requerir
+# entornos separados, tal como se usa en la versión portable:
+#   runtime/env_nnunet/
+#   runtime/env_agunet/
+#   runtime/env_plsnet/
+
+# Interfaz
+shiny
+
+# Numérico y visualización
+numpy
+matplotlib
+
+# Imagen médica
+nibabel
+SimpleITK
+dicom2nifti
+pydicom
+python-gdcm
+
+# Inferencia ONNX para Radionics/Raidionics
+onnxruntime
+
+# Deep learning auxiliar
+# Necesario para SynthStrip y algunas comprobaciones de GPU/CPU.
+torch
+
+# Neuroimagen / atlas anatómico
+nilearn
+antspyx
+antspynet
+
+# Skull-stripping
+nipreps-synthstrip

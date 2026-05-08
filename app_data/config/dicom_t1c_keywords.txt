@@ -1,0 +1,32 @@
+# Palabras clave para detectar estudios T1c / post-contraste
+# Una línea = una palabra o patrón esperado en tags DICOM
+# Se compara en minúsculas contra:
+#   SeriesDescription
+#   ProtocolName
+#   SequenceName
+#   ImageType
+#   ContrastBolusAgent
+
+t1c
+t1 ce
+t1+c
+t1_c
+t1gd
+post
+postcontrast
+post-contrast
+post contrast
+mprage c+
+mprage post
+spgr c+
+tfe post
+bravo c+
+gd
+gadolinium
+contrast
+ce
+gad neuronav volum
+neuronav civ
+neuronav civ sense
+est1w_3d_ffe
+est1w_3d_ffe sense

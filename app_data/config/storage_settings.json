@@ -1,0 +1,4 @@
+{
+  "pacientes_nifti_dir": "Pacientes_nifti",
+  "results_dir": "app_data/results"
+}
