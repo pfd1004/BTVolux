@@ -1,0 +1,23 @@
+
+__pycache__/
+
+runtime/
+
+Pacientes/
+Pacientes_nifti/
+
+app_data
+app_data/results/
+app_data/logs/
+app_data/state/
+app_data/atlas/
+
+
+# Modelos pesados
+modelos/nnunet/
+modelos/nnu_net1.7/
+modelos/radionics/
+modelos/synthstrip/
+modelos/ams/
+modelos/mri_brain_tumor_segmentation/
+modelos/trained-models
