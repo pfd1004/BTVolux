@@ -130,7 +130,7 @@ MODEL_OPTIONS: Dict[str, str] = {
     "PLS-Net": "pls-net",
     "UNet-FV": "unet-fv",
     "UNet-Slabs": "unet-slabs",
-    "Media ponderada": "media_ponderada",
+    "Mapa de calor": "mapa_de_calor",
 }
 
 MODEL_COLORS: Dict[str, str] = {
@@ -141,7 +141,7 @@ MODEL_COLORS: Dict[str, str] = {
     "pls-net": "#f59e0b",        # ámbar
     "unet-fv": "#06b6d4",        # cian
     "unet-slabs": "#e297ee",     # rosa
-    "media_ponderada": "#5f7f00",# rosa
+    "mapa_de_calor": "#5f7f00",# rosa
 }
 
 VAL_MODEL_KEYS = list(MODEL_COLORS.keys())
@@ -627,11 +627,11 @@ def find_image_and_seg(pid: str, study_date: str, model_key: str) -> Tuple[Optio
                             if "seg" in p.name.lower() and "prob" not in p.name.lower()])
             seg_path = cands[0] if cands else None
 
-    elif model_key == "media_ponderada":
-        out_dir = (P.get("root", Path(".")) / "media_ponderada")
+    elif model_key == "mapa_de_calor":
+        out_dir = (P.get("root", Path(".")) / "mapa_de_calor")
         seg_path = _pick_first_existing([
-            out_dir / f"{pid}_media_ponderada_seg.nii.gz",
-            out_dir / f"{pid}_media_ponderada_seg.nii",
+            out_dir / f"{pid}_mapa_de_calor_seg.nii.gz",
+            out_dir / f"{pid}_mapa_de_calor_seg.nii",
         ])
         if seg_path is None:
             cands = sorted([
@@ -1565,7 +1565,7 @@ def weighted_heatmap_legend_ui():
     """
     return ui.div(
         ui.div(
-            "Leyenda media ponderada",
+            "Leyenda mapa de calor",
             style="""
                 font-size:13px;
                 font-weight:700;
@@ -2936,7 +2936,7 @@ def server(input, output, session):
 
         idata = load_nifti_data(imgp)
 
-        if model_key == "media_ponderada":
+        if model_key == "mapa_de_calor":
             sdata = build_weighted_heatmap_for_study(pid, sdate, imgp)
             current_seg_path.set(segp)
         else:
@@ -3800,9 +3800,9 @@ def server(input, output, session):
             status_text.set("Selecciona paciente y estudio.")
             return
 
-        if model_key == "media_ponderada":
+        if model_key == "mapa_de_calor":
             try:
-                _reset_main_status(f"Generando segmentación NIfTI de media ponderada para {pid}/{sdate}...")
+                _reset_main_status(f"Generando segmentación NIfTI de mapa de calor para {pid}/{sdate}...")
 
                 seg_path = build_weighted_ensemble_seg_for_study(
                     pid,
@@ -3812,14 +3812,14 @@ def server(input, output, session):
                 )
 
                 if seg_path is None:
-                    _set_main_status("No se pudo generar la media ponderada: hacen falta al menos dos segmentaciones disponibles.")
+                    _set_main_status("No se pudo generar el mapa de calor: hacen falta al menos dos segmentaciones disponibles.")
                     return
 
-                _set_main_status(f"Segmentación media ponderada guardada: {seg_path.name}")
+                _set_main_status(f"Segmentación mapa de calor guardada: {seg_path.name}")
                 reload_viewer(pid, sdate, model_key)
 
             except Exception as e:
-                _set_main_status(f"Error generando media ponderada: {e}")
+                _set_main_status(f"Error generando mapa de calor: {e}")
 
             return
 
@@ -4111,15 +4111,15 @@ def server(input, output, session):
                 ),
             )
 
-            if existing is not None and csv_value_present(existing, "media_ponderada"):
+            if existing is not None and csv_value_present(existing, "mapa_de_calor"):
                 study_volumes_cache.set(existing)
                 volume_text.set(format_volume_text(model_key, existing))
                 _reset_main_status(f"Volumen ya calculado para {pid}/{sdate}. Mostrando valor guardado.")
                 return
 
-            if existing is not None and not csv_value_present(existing, "media_ponderada"):
+            if existing is not None and not csv_value_present(existing, "mapa_de_calor"):
                 _reset_main_status(
-                    f"Volumen existente para {pid}/{sdate}, pero falta media ponderada. Recalculando..."
+                    f"Volumen existente para {pid}/{sdate}, pero falta el mapa de calor. Recalculando..."
                 )
             else:
                 _reset_main_status(f"Calculando volumen para {pid}/{sdate}...")
@@ -4133,7 +4133,7 @@ def server(input, output, session):
             volume_text.set(format_volume_text(model_key, study_vols))
             _set_main_status(f"Volumen calculado para {pid}/{sdate}")
 
-            if model_key == "media_ponderada":
+            if model_key == "mapa_de_calor":
                 reload_viewer(pid, sdate, model_key)
 
         except Exception as e:
@@ -4382,15 +4382,15 @@ def server(input, output, session):
             required_value_fields=tuple(VAL_MODEL_KEYS),
         )
 
-        if existing is not None and csv_value_present(existing, "media_ponderada"):
+        if existing is not None and csv_value_present(existing, "mapa_de_calor"):
             study_dices_cache.set(existing)
             dice_text.set(format_dice_text(model_key, existing))
             _set_validation_status(f"DICE ya calculado para {pid}/{sdate}. Mostrando valores guardados.")
             return
 
-        if existing is not None and not csv_value_present(existing, "media_ponderada"):
+        if existing is not None and not csv_value_present(existing, "mapa_de_calor"):
             _set_validation_status(
-                f"DICE existente para {pid}/{sdate}, pero falta media ponderada. Recalculando..."
+                f"DICE existente para {pid}/{sdate}, pero falta el mapa de calor. Recalculando..."
             )
 
         gt_path = manual_gt_path.get()
@@ -4400,10 +4400,10 @@ def server(input, output, session):
             return
 
         try:
-            # Si el modelo seleccionado es Media ponderada, primero hay que generar su NIfTI.
+            # Si el modelo seleccionado es Mapa de calor, primero hay que generar su NIfTI.
             # Si no se hace aquí, find_image_and_seg() no la encuentra y corta antes de calcular DICE.
-            if model_key == "media_ponderada":
-                _set_validation_status(f"Generando segmentación media ponderada para {pid}/{sdate}...")
+            if model_key == "mapa_de_calor":
+                _set_validation_status(f"Generando segmentación mapa de calor para {pid}/{sdate}...")
 
                 seg_path = build_weighted_ensemble_seg_for_study(
                     pid,
@@ -4415,7 +4415,7 @@ def server(input, output, session):
                 if seg_path is None:
                     dice_text.set("")
                     _set_validation_status(
-                        "No se pudo generar la media ponderada: hacen falta al menos dos segmentaciones disponibles."
+                        "No se pudo generar el mapa de calor: hacen falta al menos dos segmentaciones disponibles."
                     )
                     return
 
@@ -4440,7 +4440,7 @@ def server(input, output, session):
                 progress_cb=_set_validation_status,
             )
 
-            # Releer por si compute_study_dices acaba de generar la media ponderada
+            # Releer por si compute_study_dices acaba de generar el mapa de calor
             img_path, pred_path = find_image_and_seg(pid, sdate, model_key)
 
             study_dices_cache.set(all_dices)
@@ -4958,7 +4958,7 @@ def server(input, output, session):
     def weighted_heatmap_legend():
         model_key = MODEL_OPTIONS.get(input.model(), "")
 
-        if model_key != "media_ponderada":
+        if model_key != "mapa_de_calor":
             return ui.div()
 
         return weighted_heatmap_legend_ui()
@@ -5073,7 +5073,7 @@ def server(input, output, session):
             txt, bg = "Sin imagen", "#6b7280"
         elif sdata is None:
             txt, bg = "Seg: no disponible", "#b45309"
-        elif model_key == "media_ponderada":
+        elif model_key == "mapa_de_calor":
             txt, bg = "Mapa: consenso", "#2563eb"
         else:
             txt, bg = "Seg: cargada", "#15803d"
@@ -5460,7 +5460,7 @@ def server(input, output, session):
             seg_color=color,
             cross=cross_voxel.get(),
             draw_cross=crosshair_enabled.get(),
-            heatmap=(model_key == "media_ponderada"),
+            heatmap=(model_key == "mapa_de_calor"),
         )
 
 
@@ -5479,7 +5479,7 @@ def server(input, output, session):
             seg_color=color,
             cross=cross_voxel.get(),
             draw_cross=crosshair_enabled.get(),
-            heatmap=(model_key == "media_ponderada"),
+            heatmap=(model_key == "mapa_de_calor"),
         )
 
 
@@ -5498,7 +5498,7 @@ def server(input, output, session):
             seg_color=color,
             cross=cross_voxel.get(),
             draw_cross=crosshair_enabled.get(),
-            heatmap=(model_key == "media_ponderada"),
+            heatmap=(model_key == "mapa_de_calor"),
         )
 
 app = App(app_ui, server)
